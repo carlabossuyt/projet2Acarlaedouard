@@ -1,16 +1,30 @@
+from pylab import *
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
-data=[[0,-2,-4,-6,-8],
-      [-2,0,0,0,0],
-      [-4,0,0,0,0],
-      [-6,0,0,0,0],
-      [-8,0,0,0,0]]
-column_labels=["","A", "T", "C", "G"]
-df=pd.DataFrame(data,columns=column_labels)
-plt.axis('tight')
-plt.axis('off')
-plt.table(cellText=df.values,colLabels=df.columns,rowLabels=["","G","C","T","A"],loc="center")
+def remplir(sequencea, sequenceb):
+    gap_score = -2
+    match = 2
+    mismatch = -1
+    grille = np.zeros((len(sequencea) + 1, len(sequenceb) + 1))
 
-plt.show()
+    for i in range(len(sequencea) + 1):
+        grille[i][0] = i * gap_score
+
+    for j in range(len(sequenceb) + 1):
+        grille[0][j] = j * gap_score
+
+
+def affiche(sequencea, sequenceb):
+    plt.axis('tight')
+    plt.axis('off')
+    plt.table(cellText=grille, colLabels=sequencea, rowLabels=sequenceb, loc="center")
+    plt.show()
+
+
+if __name__ == "__main__":
+    sequencea = ["A", "C", "G", "G", "C", "T", "A", "T"]
+    sequenceb = ["A", "C", "T", "G", "T", "A", "G"]
+    remplir(sequencea, sequenceb)
+
