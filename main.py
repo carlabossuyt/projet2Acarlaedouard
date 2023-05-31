@@ -1,16 +1,18 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+# This is a sample Python script.
+
+# Press Maj+F10 to execute it or replace it with your code.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-data=[[0,-2,-4,-6,-8],
-      [-2,0,0,0,0],
-      [-4,0,0,0,0],
-      [-6,0,0,0,0],
-      [-8,0,0,0,0]]
-column_labels=["","A", "T", "C", "G"]
-df=pd.DataFrame(data,columns=column_labels)
-plt.axis('tight')
-plt.axis('off')
-plt.table(cellText=df.values,colLabels=df.columns,rowLabels=["","G","C","T","A"],loc="center")
+def print_hi(name):
+    # Use a breakpoint in the code line below to debug your script.
+    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-plt.show()
+
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    print_hi('coucou carla')
+
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+est ce que ca marche ?
