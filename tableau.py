@@ -46,15 +46,13 @@ def affiche(grille, sequence1, sequence2):
     #suppression des axes
     ax.set_axis_off()
     #creation d'une table avec la grill d'alignement , les séquences en tant que labels de lignes et de colonnes
-    ax.table(cellText=grille, rowLabels=sequence1, colLabels=sequence2, loc="center")
+    ax.table(cellText=grille, rowLabels="-" + sequence1, colLabels="-" + sequence2, loc="center")
     #affichage de la figure
     plt.show()
 
 
 if __name__ == "__main__":
-    sequencea = "ACGGCTAT"
-    sequenceb = "ACTGTAG"
+    sequencea = "ACTGTAG"
+    sequenceb = "ACGGCTAT"
     grille1 = remplir(sequencea, sequenceb) #remplissage de la grille d'alignement
-    print(np.shape(grille1)) #affichage de la longueur de la séquence b
-    print(len(sequenceb))
     affiche(grille1, sequencea, sequenceb) #affichage de la grille d'alignement
