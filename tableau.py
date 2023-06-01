@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 
 
 def remplir(sequence1, sequence2):
+    """
+    Remplissage de la grille
+    :param sequence1: str
+    :param sequence2: str
+    :return: grille
+    """
     # initialisation des scores
     addition = -2
     identique = 2
@@ -29,16 +35,26 @@ def remplir(sequence1, sequence2):
 
 
 def affiche(grille, sequence1, sequence2):
+    """
+    Affichage de la grille
+    :param grille: np.array
+    :param sequence1: str
+    :param sequence2: str
+    """
+    #creation de la figure et des axes
     fig, ax = plt.subplots()
+    #suppression des axes
     ax.set_axis_off()
+    #creation d'une table avec la grill d'alignement , les séquences en tant que labels de lignes et de colonnes
     ax.table(cellText=grille, rowLabels=sequence1, colLabels=sequence2, loc="center")
+    #affichage de la figure
     plt.show()
 
 
 if __name__ == "__main__":
     sequencea = "ACGGCTAT"
     sequenceb = "ACTGTAG"
-    grille1 = remplir(sequencea, sequenceb)
-    print(np.shape(grille1))
+    grille1 = remplir(sequencea, sequenceb) #remplissage de la grille d'alignement
+    print(np.shape(grille1)) #affichage de la longueur de la séquence b
     print(len(sequenceb))
-    affiche(grille1, sequencea, sequenceb)
+    affiche(grille1, sequencea, sequenceb) #affichage de la grille d'alignement
