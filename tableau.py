@@ -40,6 +40,7 @@ def affiche(grille, sequence1, sequence2, cheminoptimal):
     :param grille: np.array
     :param sequence1: str
     :param sequence2: str
+    :param cheminoptimal: list
     """
     #creation de la figure et des axes
     fig, ax = plt.subplots()
@@ -55,6 +56,12 @@ def affiche(grille, sequence1, sequence2, cheminoptimal):
     print(grille)
 
 def remonter(grille, sequence1, sequence2):
+    """"
+    Remonte le chemin optimal danns la grille
+    :param grille: np.array
+    :param sequence1: str
+    :param sequence2: str
+    :return: list"""
     def verif():
         i, j= parcours[-1] #recupere les coordonnées de la dernière case
         score=grille[x][y]
@@ -69,22 +76,28 @@ def remonter(grille, sequence1, sequence2):
         else:
             return False
     x= len(grille)-1
-    y = len(grille[0])-1 #on parcours les colonnes dans une ligne fixe
+    y = len(grille[0])-1 #on parcourt les colonnes dans une ligne fixe
     parcours=[(x,y)]
     while x!=1 and y!=1:
         antecedents=[((x,y-1), grille[x][y-1], 1), #antecedant haut = position 1
                      ((x-1, y-1), grille[x-1][y-1], 2), #antecedant diago = position 2
                      ((x-1, y), grille[x-1][y], 3)] ##antecedant gauche = position 3
-        antecedents.sort(key=operator.itemgetter(1), reverse=True) #permet de trier et sélectionner le + grand antecedents
+        antecedents.sort(key=operator.itemgetter(1), reverse=True) #permet de trier et sélectionner le plus grand antécédent
         for cord_ant_max, score_ant_max, position in antecedents:
             max = score_ant_max
             if verif():
                 parcours.append(cord_ant_max) #ajoute les coordonnées à la liste parcours
-                break #retire le maximum si il le score n'est pas bon
+                break #retire le maximum si le score n'est pas bon
         x, y =parcours[-1]
     return parcours
 
 def blosum(sequence1, sequence2):
+    """
+    Calcul les scores Blosum entre 2 séquences
+    :param sequence1: str
+    :param sequence2: str
+    :return:
+    """
     li_bl = []
     f = open("blosum62.txt", "r")
     first = None
@@ -119,9 +132,14 @@ def blosum(sequence1, sequence2):
     #print(str("le score blosum de la colonne"), n_colonne, str("et de la ligne"), n_ligne, str("est"), li_bl[n_colonne][n_ligne])
 
 def adn2arn(sequence):
-    #initialiser le résultat (arn
+    """
+    Convertit une séqeunce d'ADN en ARN
+    :param sequence: str
+    :return: str
+    """
+    #initialiser le résultat (ARN)
     arn = ""
-    #parcours de la chaine d'adn
+    #parcours de la chaine d'ADN
     for b in sequence:
         if b == "T":
             arn = arn + "U"
@@ -131,7 +149,11 @@ def adn2arn(sequence):
 
 
 def arn2protein(arn):
-    # transformer une chaine d'ARN en chaine d'acides aminées
+    """
+    Convertit une séquence d'ARN en séquence d'acides aminés/ en protéine
+    :param arn: str
+    :return: str
+    """
     table = {'UUU': 'F', 'CUU': 'L', 'AUU': 'I','GUU': 'V', 'UUC': 'F', 'CUC': 'L', 'AUC': 'I', 'GUC': 'V', 'UUA': 'L', 'CUA': 'L', 'AUA': 'I', 'GUA': 'V', 'UUG': 'L', 'CUG': 'L', 'AUG': 'M', 'GUG': 'V','UCU': 'S', 'CCU': 'P', 'ACU': 'T', 'GCU': 'A', 'UCC': 'S', 'CCC': 'P', 'ACC':'T', 'GCC': 'A', 'UCA': 'S', 'CCA': 'P', 'ACA': 'T', 'GCA': 'A', 'UCG': 'S','CCG': 'P', 'ACG': 'T', 'GCG': 'A', 'UAU': 'Y', 'CAU': 'H', 'AAU': 'N', 'GAU':'D', 'UAC': 'Y', 'CAC': 'H', 'AAC': 'N', 'GAC': 'D', 'UAA': 'Stop', 'CAA': 'Q','AAA': 'K', 'GAA': 'E', 'UAG': 'Stop', 'CAG': 'Q', 'AAG': 'K', 'GAG': 'E', 'UGU':'C', 'CGU': 'R', 'AGU': 'S', 'GGU': 'G', 'UGC': 'C', 'CGC': 'R', 'AGC': 'S','GGC': 'G', 'UGA': 'Stop', 'CGA': 'R', 'AGA': 'R', 'GGA': 'G', 'UGG': 'W', 'CGG':'R', 'AGG': 'R', 'GGG': 'G'}
     res= ''
     for i in range(0, len(arn), 3):
@@ -156,10 +178,10 @@ if __name__ == "__main__":
     print(remonter(grille1, sequencea, sequenceb))
     blosum(sequencea, sequenceb)
 
-    print(sequencea, str("devient"), adn2arn(sequencea))
-    print(sequenceb, str("devient"), adn2arn(sequenceb))
+    print(sequencea, str("devient l'arn1: "), adn2arn(sequencea))
+    print(sequenceb, str("devient l'arn2: "), adn2arn(sequenceb))
 
     protein1=adn2arn(sequencea)
     protein2=adn2arn(sequenceb)
-    print(arn2protein(protein1))
-    print(arn2protein(protein2))
+    print(str("l'arn1 devient la protéine1: "), arn2protein(protein1))
+    print(str("l'arn2 devient la protéine2: "), arn2protein(protein2))
