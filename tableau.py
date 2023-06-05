@@ -91,6 +91,29 @@ def remonter(grille, sequence1, sequence2):
         x, y =parcours[-1]
     return parcours
 
+
+def align(parcours, sequence1, sequence2):
+    alignement1 = ""
+    nv_sequence1 = ""
+    nv_sequence2 = ""
+    parcours.reverse()
+    print(parcours)
+    for i in range(1, len(parcours)):
+        if parcours[i][0] == parcours[i-1][0] + 1 and parcours[i][1] == parcours[i-1][1] + 1:
+            alignement1 += "|"
+            nv_sequence1 += sequence1[parcours[i][0]-1] #0 : abscisse du mot 1
+            nv_sequence2 += sequence2[parcours[i][1]-1] #-1 = pour le décalage
+        elif parcours[i][0] == parcours[i][0] + 1 and parcours[i][1] == parcours[i-1][1]:
+            nv_sequence1 += "-"
+            alignement1 += " "
+            nv_sequence2 += sequence2[parcours[i][1] - 1]
+        else:
+            alignement1 += " "
+            nv_sequence2 += "-"
+            nv_sequence1 += sequence1[parcours[i][0] - 1]
+    return nv_sequence1, alignement1, nv_sequence2
+
+
 def blosum(sequence1, sequence2):
     """
     Calcul les scores Blosum entre 2 séquences
@@ -175,7 +198,11 @@ if __name__ == "__main__":
     grille1 = remplir(sequencea, sequenceb) #remplissage de la grille d'alignement
     cheminoptimal = remonter(grille1, sequencea, sequenceb)
     affiche(grille1, sequencea, sequenceb, cheminoptimal) #affichage de la grille d'alignement
-    print(remonter(grille1, sequencea, sequenceb))
+    parcours = remonter(grille1, sequencea, sequenceb)
+    alignement = align(parcours, sequencea, sequenceb)
+    print(alignement[0])
+    print(alignement[1])
+    print(alignement[2])
     blosum(sequencea, sequenceb)
 
     print(sequencea, str("devient l'arn1: "), adn2arn(sequencea))
