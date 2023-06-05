@@ -48,7 +48,7 @@ def affiche(grille, sequence1, sequence2, cheminoptimal):
     #creation d'une table avec la grille d'alignement , les séquences en tant que labels de lignes et de colonnes
     table = ax.table(cellText=grille, rowLabels="-" + sequence1, colLabels="-" + sequence2, loc="center")
     for x,y in cheminoptimal:
-        cellule = table.get_celld()[x+1, y]
+        cellule = table.get_celld()[x+1, y] #table.cell pour accéder à une cellule spécifique dans un tableau
         cellule.set_facecolor("pink")
     #affichage de la figure
     plt.show()
@@ -84,6 +84,67 @@ def remonter(grille, sequence1, sequence2):
         x, y =parcours[-1]
     return parcours
 
+def blosum(sequence1, sequence2):
+    li_bl = []
+    f = open("blosum62.txt", "r")
+    first = None
+    for ligne in f.readlines():
+        if "#" not in ligne:
+            if first is None: #permet de récupérer la 1ère ligne
+                first = ligne.split()
+            else:
+                decoupe = ligne.split()
+                li_bl.append(decoupe[1:]) #permet d'enlever le 1er caractère de chaque ligne
+    print(first)
+    for l in li_bl:
+        print(l) #afficher les lignes
+
+    indexes = {}
+    # {"A": 0, "R": 1, etc}
+    i = 0
+    for lettre in first:
+        indexes[lettre] = i
+        i += 1
+
+    blossum_values = {}
+    # {("R", "Q")): 1, ...}
+    for l1 in first:
+        for l2 in first:
+            blossum_values[(l1, l2)] = li_bl[indexes[l1]][indexes[l2]]
+
+    print(blossum_values[("A", "D")])
+
+    #n_colonne = first.index(sequence1[5])
+    #n_ligne = first.index(sequence2[4])
+    #print(str("le score blosum de la colonne"), n_colonne, str("et de la ligne"), n_ligne, str("est"), li_bl[n_colonne][n_ligne])
+
+def adn2arn(sequence):
+    #initialiser le résultat (arn
+    arn = ""
+    #parcours de la chaine d'adn
+    for b in sequence:
+        if b == "T":
+            arn = arn + "U"
+        else:
+            arn += b
+    return arn
+
+
+def arn2protein(arn):
+    # transformer une chaine d'ARN en chaine d'acides aminées
+    table = {'UUU': 'F', 'CUU': 'L', 'AUU': 'I','GUU': 'V', 'UUC': 'F', 'CUC': 'L', 'AUC': 'I', 'GUC': 'V', 'UUA': 'L', 'CUA': 'L', 'AUA': 'I', 'GUA': 'V', 'UUG': 'L', 'CUG': 'L', 'AUG': 'M', 'GUG': 'V','UCU': 'S', 'CCU': 'P', 'ACU': 'T', 'GCU': 'A', 'UCC': 'S', 'CCC': 'P', 'ACC':'T', 'GCC': 'A', 'UCA': 'S', 'CCA': 'P', 'ACA': 'T', 'GCA': 'A', 'UCG': 'S','CCG': 'P', 'ACG': 'T', 'GCG': 'A', 'UAU': 'Y', 'CAU': 'H', 'AAU': 'N', 'GAU':'D', 'UAC': 'Y', 'CAC': 'H', 'AAC': 'N', 'GAC': 'D', 'UAA': 'Stop', 'CAA': 'Q','AAA': 'K', 'GAA': 'E', 'UAG': 'Stop', 'CAG': 'Q', 'AAG': 'K', 'GAG': 'E', 'UGU':'C', 'CGU': 'R', 'AGU': 'S', 'GGU': 'G', 'UGC': 'C', 'CGC': 'R', 'AGC': 'S','GGC': 'G', 'UGA': 'Stop', 'CGA': 'R', 'AGA': 'R', 'GGA': 'G', 'UGG': 'W', 'CGG':'R', 'AGG': 'R', 'GGG': 'G'}
+    res= ''
+    for i in range(0, len(arn), 3):
+        code = arn[i:i+3]
+        if code in table:
+            if table[code] == "Stop":
+                return res
+            else:
+                res += table[code]
+        else:
+            return res
+    return res
+
 
 
 if __name__ == "__main__":
@@ -92,6 +153,13 @@ if __name__ == "__main__":
     grille1 = remplir(sequencea, sequenceb) #remplissage de la grille d'alignement
     cheminoptimal = remonter(grille1, sequencea, sequenceb)
     affiche(grille1, sequencea, sequenceb, cheminoptimal) #affichage de la grille d'alignement
-
-
     print(remonter(grille1, sequencea, sequenceb))
+    blosum(sequencea, sequenceb)
+
+    print(sequencea, str("devient"), adn2arn(sequencea))
+    print(sequenceb, str("devient"), adn2arn(sequenceb))
+
+    protein1=adn2arn(sequencea)
+    protein2=adn2arn(sequenceb)
+    print(arn2protein(protein1))
+    print(arn2protein(protein2))
