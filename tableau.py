@@ -268,9 +268,9 @@ if __name__ == "__main__":
     affiche(grille1, sequencea, sequenceb, cheminoptimal) #affichage de la grille d'alignement
     parcours = remonter(grille1, sequencea, sequenceb)
     alignement = align(parcours, sequencea, sequenceb)
-    print(alignement[0])
-    print(alignement[1])
     print(alignement[2])
+    print(alignement[1])
+    print(alignement[0])
 
 
     print(sequencea, str("devient l'arn1: "), adn2arn(sequencea))
