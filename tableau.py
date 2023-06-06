@@ -89,6 +89,7 @@ def remonter(grille, sequence1, sequence2):
                 parcours.append(cord_ant_max) #ajoute les coordonnées à la liste parcours
                 break #retire le maximum si le score n'est pas bon
         x, y =parcours[-1]
+    parcours.append((0,0))
     return parcours
 
 
@@ -261,8 +262,8 @@ def remonter_blosum(blosum_dict, grille, sequence1, sequence2):
 
 
 if __name__ == "__main__":
-    sequencea = "ACTGTAG"
-    sequenceb = "ACGGCTAT"
+    sequencea = "ACTGTAGTCAGT"
+    sequenceb = "ACGGCTATGCCTAGC"
     grille1 = remplir(sequencea, sequenceb) #remplissage de la grille d'alignement
     cheminoptimal = remonter(grille1, sequencea, sequenceb)
     affiche(grille1, sequencea, sequenceb, cheminoptimal) #affichage de la grille d'alignement
