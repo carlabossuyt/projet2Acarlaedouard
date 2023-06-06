@@ -57,7 +57,7 @@ def affiche(grille, sequence1, sequence2, cheminoptimal):
 
 def remonter(grille, sequence1, sequence2):
     """"
-    Remonte le chemin optimal danns la grille
+    Remonte le chemin optimal dans la grille
     :param grille: np.array
     :param sequence1: str
     :param sequence2: str
@@ -142,14 +142,15 @@ def blosum(sequence1, sequence2):
         indexes[lettre] = i
         i += 1
 
+
     blossum_values = {}
     # {("R", "Q")): 1, ...}
     for l1 in first:
         for l2 in first:
-            blossum_values[(l1, l2)] = li_bl[indexes[l1]][indexes[l2]]
+            blossum_values[(l1, l2)] = int(li_bl[indexes[l1]][indexes[l2]])
 
-    print(blossum_values[("A", "D")])
-
+    print(blossum_values)
+    return blossum_values
     #n_colonne = first.index(sequence1[5])
     #n_ligne = first.index(sequence2[4])
     #print(str("le score blosum de la colonne"), n_colonne, str("et de la ligne"), n_ligne, str("est"), li_bl[n_colonne][n_ligne])
@@ -190,6 +191,70 @@ def arn2protein(arn):
             return res
     return res
 
+def remplir_blosum(blosum, sequence1, sequence2):
+    """
+    Remplissage de la grille
+    :param sequence1: str
+    :param sequence2: str
+    :return: grille
+    """
+    # remplissage de la grille de 0
+    grille2 = np.zeros((len(sequence1) + 1, len(sequence2) + 1))
+    # initialisation de la 2e ligne et la 2e colonne
+    print(grille2)
+    for i in range(1,len(sequence1)+1):
+        grille2[i][0] = grille2[i-1][0] -4
+
+    for j in range(1,len(sequence2)+1):
+        grille2[0][j] = grille2[0][j-1] -4
+    for i in range(1, len(sequence1) + 1):
+        for j in range(1, len(sequence2) + 1):
+            # print(i, j, grille[i - 1][j - 1], sequence1[i - 1], sequence2[j - 1], blosum[sequence1[i - 1], sequence2[j - 1]])
+            nv_match = grille2[i - 1][j - 1] + blosum[sequence1[i - 1], sequence2[j - 1]]
+            nv_deletion = grille2[i - 1][j] -4
+            nv_insertion = grille2[i][j - 1] -4
+            grille2[i][j] = max(nv_match, nv_insertion, nv_deletion)
+    return grille2
+
+
+
+def remonter_blosum(blosum_dict, grille, sequence1, sequence2):
+    """"
+    Remonte le chemin optimal dans la grille
+    :param grille: np.array
+    :param sequence1: str
+    :param sequence2: str
+    :return: list"""
+    def verif():
+        i, j= parcours[-1] #recupere les coordonnées de la dernière case
+        score=grille[x][y]
+        #a, b, c = sequence1[i - 1], sequence2[j - 1],  blosum_dict[sequence1[i - 1], sequence2[j - 1]]
+        if position == 1 and ((max - 4) == score): #position haut
+            return True
+        elif position == 3 and ((max-4) == score): #position gauche
+            return True
+        elif position == 2 and max + blosum_dict[sequence1[i - 1], sequence2[j - 1]] == score:
+            return True
+        else:
+            return False
+    x= len(grille)-1
+    y = len(grille[0])-1 #on parcourt les colonnes dans une ligne fixe
+    parcours=[(x,y)]
+    while x!=1 and y!=1:
+        antecedents=[((x,y-1), grille[x][y-1], 1), #antecedant haut = position 1
+                     ((x-1, y-1), grille[x-1][y-1], 2), #antecedant diago = position 2
+                     ((x-1, y), grille[x-1][y], 3)] ##antecedant gauche = position 3
+        antecedents.sort(key=operator.itemgetter(1), reverse=True) #permet de trier et sélectionner le plus grand antécédent
+        print(x, y, antecedents)
+        for cord_ant_max, score_ant_max, position in antecedents:
+            max = score_ant_max
+            if verif():
+                parcours.append(cord_ant_max) #ajoute les coordonnées à la liste parcours
+                break #retire le maximum si le score n'est pas bon
+        x, y =parcours[-1]
+    return parcours
+
+
 
 
 if __name__ == "__main__":
@@ -203,7 +268,7 @@ if __name__ == "__main__":
     print(alignement[0])
     print(alignement[1])
     print(alignement[2])
-    blosum(sequencea, sequenceb)
+
 
     print(sequencea, str("devient l'arn1: "), adn2arn(sequencea))
     print(sequenceb, str("devient l'arn2: "), adn2arn(sequenceb))
@@ -212,3 +277,16 @@ if __name__ == "__main__":
     protein2=adn2arn(sequenceb)
     print(str("l'arn1 devient la protéine1: "), arn2protein(protein1))
     print(str("l'arn2 devient la protéine2: "), arn2protein(protein2))
+
+
+
+    sequencea2="MKTKIAEYLKALLKA"
+    sequenceb2="ARNDCQEGHILYV"
+    blosum_dict = blosum(sequencea2, sequenceb2)
+    grille2 = remplir_blosum(blosum_dict, sequencea2, sequenceb2)
+    print("1", grille2)
+    cheminoptimal2 = remonter_blosum(blosum_dict, grille2, sequencea2, sequenceb2)
+    print(2, cheminoptimal2)
+    affiche(grille2, sequencea2, sequenceb2, cheminoptimal2)
+    print(3)
+    parcours2 = remonter_blosum(blosum_dict, grille2, sequencea2, sequenceb2)
