@@ -100,17 +100,20 @@ def align(parcours, sequence1, sequence2):
     print(parcours)
     for i in range(1, len(parcours)):
         if parcours[i][0] == parcours[i-1][0] + 1 and parcours[i][1] == parcours[i-1][1] + 1:
-            alignement1 += "|"
+            if sequence1[parcours[i][0]-1] == sequence2[parcours[i][1]-1]:
+                alignement1 += "|"
+            else:
+                alignement1 += " "
             nv_sequence1 += sequence1[parcours[i][0]-1] #0 : abscisse du mot 1
             nv_sequence2 += sequence2[parcours[i][1]-1] #-1 = pour le décalage
-        elif parcours[i][0] == parcours[i][0] + 1 and parcours[i][1] == parcours[i-1][1]:
-            nv_sequence1 += "-"
+        elif parcours[i][0] == parcours[i-1][0] + 1 and parcours[i][1] == parcours[i-1][1]:
+            nv_sequence2 += "-"
             alignement1 += " "
-            nv_sequence2 += sequence2[parcours[i][1] - 1]
+            nv_sequence1 += sequence1[parcours[i][0] - 1]
         else:
             alignement1 += " "
-            nv_sequence2 += "-"
-            nv_sequence1 += sequence1[parcours[i][0] - 1]
+            nv_sequence1 += "-"
+            nv_sequence2 += sequence2[parcours[i][1] - 1]
     return nv_sequence1, alignement1, nv_sequence2
 
 
