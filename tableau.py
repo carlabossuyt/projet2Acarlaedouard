@@ -280,8 +280,8 @@ if __name__ == "__main__":
 
 
 
-    sequencea2="MKTKIAEYLKALLKA"
-    sequenceb2="ARNDCQEGHILYV"
+    sequencea2="MKTKIAEYLKALLKNTEKYL"
+    sequenceb2="VIENEIAYIKDPVFGIVRNRVSA"
     blosum_dict = blosum(sequencea2, sequenceb2)
     grille2 = remplir_blosum(blosum_dict, sequencea2, sequenceb2)
     print("1", grille2)
