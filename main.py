@@ -9,10 +9,12 @@ if __name__ == "__main__":
     affiche(grille1, sequencea, sequenceb, cheminoptimal) #affichage de la grille d'alignement
     parcours = remonter(grille1, sequencea, sequenceb)
     alignement = align(parcours, sequencea, sequenceb)
+
     #alignement ADN:
     print(alignement[2])
     print(alignement[1])
     print(alignement[0])
+
     #protéines
     sequencea2="MKTKIAEYLKALLKNTEKYL"
     sequenceb2="VIENEIAYIKDPVFGIVRNRVSA"
@@ -25,6 +27,7 @@ if __name__ == "__main__":
     #print(3)
     parcours2 = remonter_blosum(blosum_dict, grille2, sequencea2, sequenceb2)
 
+    #alignement protéine
     alignement2 = align_blosum(parcours2, sequencea2, sequenceb2)
     print(alignement2[0])
     print(alignement2[1])
